@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 import data from '../data'
 
 
@@ -7,9 +7,15 @@ export const ProductContext = createContext();
 
 const ProductContextProvider = props => {
 
+  const initialState = JSON.parse(localStorage.getItem('cartItems')) || []
+
   const [products] = useState(data);
 
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState(initialState);
+
+  useEffect(() => {
+    localStorage.setItem('cartItems', JSON.stringify(cart))
+  }, [cart])
 
   const addItem = item => {
     // if item.id ? setcart : alert(you can only have one book)
@@ -17,8 +23,6 @@ const ProductContextProvider = props => {
       ? setCart(cart)
       : setCart([...cart, item]);
     console.log('adddddddd', item.id);
-
-    
   };
 
   const removeItem = id => {
